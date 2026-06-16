@@ -199,6 +199,18 @@ void cadastroClientes(){
     } else {
         printf("\nERRO: Numero do cartao invalido! Registro cancelado.\n");
     }
+
+    // Chave Pix ou email
+	printf("\nDigite a sua chave Pix (somente email): ");
+	fgets(novoCliente.chavePix, 30, stdin);
+
+	novoCliente.chavePix[strcspn(novoCliente.chavePix, "\n")] = '\0';
+
+	if(validarEmail(novoCliente.chavePix) == 1){
+		printf("\nEmail/Pix valido! Cliente cadastrado com sucesso.\n");
+	} else {
+		printf("\nERRO: Email invalido! Registro cancelado.\n");
+	}
 }
 
 int validarData(data d) {
