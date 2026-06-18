@@ -287,14 +287,37 @@ int validarTelefone(char telefone[]) {
 }
 
 int validarCPF(char cpf[]){
-	int tam = strlen(CPF), i = 0, soma = 0, ;
-	
+	int tam = strlen(cpf), i = 0, soma = 0,todosIguais = 1;
+    int peso = 10, resto = 0, atualNumero = 0;
+
+    // 1 verificar se o cpf tem exatamente 11 digitos
 	if(tam != 11){
 		return 0;
 	}
-	
-	
-	
+
+    // 2 verificar se o cpf não são iguais
+    for(i = 0; i < 11; i++){
+        if(cpf[i] != cpf[0]){
+            todosIguais = 0;
+            break;
+        }
+    }
+
+    if(todosIguais == 1){
+        return 0;
+    }
+
+    // 3 multiplicar
+    for(i = 0; i < 8; i++){
+            atualNumero = cpf[i] - '0';
+            soma += (atualNumero * peso);
+            peso--;
+    }
+
+    resto = soma % 11;
+
+    // continuar depois
+
 	return 1;
 }
 
