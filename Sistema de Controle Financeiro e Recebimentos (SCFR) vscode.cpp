@@ -284,7 +284,7 @@ int validarTelefone(char telefone[]) {
 
 int validarCPF(char cpf[]){
 	int tam = strlen(cpf), i = 0, soma = 0,todosIguais = 1;
-    int peso = 10, resto = 0, atualNumero = 0;
+    int peso = 10, resto = 0, atualNumero = 0, digitosIniciais, digitosFinais;
 
     // 1 verificar se o cpf tem exatamente 11 digitos
 	if(tam != 11){
@@ -303,17 +303,53 @@ int validarCPF(char cpf[]){
         return 0;
     }
 
-    // 3 multiplicar
-    for(i = 0; i < 8; i++){
+    // 3 multiplicar os primeiros digitos
+    for(i = 0; i < 9; i++){
             atualNumero = cpf[i] - '0';
             soma += (atualNumero * peso);
             peso--;
     }
 
+    // armazenando a soma
     resto = soma % 11;
+    // para fazer a verificação precisa do resto da divisão 
 
-    // continuar depois
+    //o resto não pode ter mais de 1 casa
+    if(resto < 2){
+        digitosIniciais = 0; // Se o resto der 0 ou 1, o digito vira 0. 
+    } else {
+        digitosIniciais = 11 - resto; // Senão a conta continua normal 
+    }
 
+    // Verifica se tem um numero na 10 casa
+    if(digitosIniciais != (cpf[9] - '0')){
+        return 0; // Se for diferente, o CPF é invalido
+    }
+
+    // Fase de verificar o segundo digito
+    // Limpar a soma e peso
+    soma = 0;
+    peso = 11;
+
+    // Multiplicar os 10 primeiros nuemros 
+    for(i = 0; i < 10; i++){
+        atualNumero = cpf[i] - '0';
+        soma += (atualNumero * peso);
+        peso--;
+    }
+
+     resto = soma % 11;
+
+    if(resto < 2){
+        digitosFinais = 0; 
+    } else {
+        digitosFinais = 11 - resto; 
+    }
+
+    // Verifica se tem um numero na 10 casa
+    if(digitosFinais != (cpf[10] - '0')){
+        return 0; // Se for diferente, o CPF é invalido
+    }
 	return 1;
 }
 
