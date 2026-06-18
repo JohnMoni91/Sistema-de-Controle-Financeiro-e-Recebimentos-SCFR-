@@ -110,6 +110,17 @@ Consultar com base nos dados da venda e parcela existente. O cliente pode ter ma
 // gerador automatico de parcelas
 void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda);
 
+
+//declarando a função de diasPorMes
+data diasPorMes(data dataAtual) {
+    dataAtual.mes += 1;
+    if (dataAtual.mes > 12) {
+        dataAtual.mes = 1;
+        dataAtual.ano += 1;
+    }
+    return dataAtual;
+}
+
 void cadastroClientes(){
     Cliente listaClientes[LISTA];
     int qtdClientes = 0;
@@ -384,7 +395,7 @@ void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda) {
             printf("Limite de parcelas atingido\n");
             return;
         	}
-		}
+		
 	vencimento = diasPorMes(vencimento);
  		p.idParcela = proximoIdParcela++;
         p.idVenda  = idVenda;
@@ -398,6 +409,7 @@ void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda) {
  			listaParcelas[qtdParcelas] = p;
         	qtdParcelas++;
     }
+}
 
 /*
 Só anotação, variaveis como a listaParcelas, qtdParcelas, proximoParcela não estavam declaradas
@@ -405,6 +417,5 @@ Só anotação, variaveis como a listaParcelas, qtdParcelas, proximoParcela não
 teve umas confusão entre qtd e qtde. Coloquei tudo qtd
 
 vai ter que criar uma função chamada diaPorMes para poder executar o vencimento 
-
 
 */
