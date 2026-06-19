@@ -11,6 +11,7 @@ Locale é para localização do idioma
 Só para deixar salvo caso o professor permitir. time.h É para verificar o ano conforme o tempo atual
 */
 //Parcelas é maximo 12 mesmo?
+//acredito que sim
 #define LISTA 100
 #define MAX_PARCELAS 12
 // estrutura de data de registro
@@ -39,7 +40,7 @@ typedef struct Vendas
     Cliente cliente;
     float valorTotalVenda;
     int formaPagamento;
-    int qtdeParcelas;
+    int qtdParcelas;
     data dataVenda;
     char observacao[50];
 }vendas;
@@ -55,6 +56,18 @@ typedef struct Parcelas
     data dataRecebimento;
     char situacaoDaParcela; // A: em aberto, R: recebido, V: vencido, C: cancelado
 }Parcela;
+
+// Declarando variaveis globais de vendas
+Parcela listaParcelas[500];  // A prateleira que guarda todas as parcelas
+int qtdParcelas = 0;         // O contador de quantas parcelas existem
+int proximoIdParcela = 1001; // O gerador de ID automático
+
+Cliente listaClientes[LISTA];
+int qtdClientes = 0;
+
+vendas listaVendas[100];
+int qtdVendas = 0;
+int proximoIdVenda = 101;
 
 // Funções Financeiras
 float recibos();
@@ -95,61 +108,17 @@ Consultar com base nos dados da venda e parcela existente. O cliente pode ter ma
 */
 
 // gerador automatico de parcelas
-void geradorParcelas(int idVenda, float valorTotal, int qtdd, Data dataVenda) {
-	Parcela p;
-    Data vencimento;
-    float valorParcela;
-    int i;
+void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda);
 
-	valorParcela = valorTotal / qtde;
-    vencimento = dataVenda;
-	for (i = 0; i < qtde; i++) {
-        if (qtdParcelas >= MAX_PARCELAS) {
-            printf("Limite de parcelas atingido\n");
-            return;
-        	}
-		}
-	vencimento = diasPorMes(vencimento);
- 		p.idParcela = proximoIdParcela++;
-        p.idVenda  = idVenda;
-        p.numeroDaParcela = i + 1;
-        p.valorDaParcela = valorParcela;
-        p.dataVencimento =  vencimento;
-        p.dataRecebimento.dia = 0;
-        p.dataRecebimento.mes = 0;
-        p.dataRecebimento.ano = 0;
-        p.situacaoDaParcela = 'A'; // A de Em aberto
- 			listaParcelas[qtdParcelas] = p;
-        	qtdParcelas++;
+
+//declarando a função de diasPorMes
+data diasPorMes(data dataAtual) {
+    dataAtual.mes += 1;
+    if (dataAtual.mes > 12) {
+        dataAtual.mes = 1;
+        dataAtual.ano += 1;
     }
-}
-
-int main(){
-	int op;
-	
-	do{
-		printf("\nSISTEMA DE CONTROLE FINANCEIRO\n");
-		printf("\n1 - Cadastro de cliente\n");
-		printf("\n0 - Sair\n");
-		
-		scanf("%d", &op);
-		
-		getchar();
-		
-		switch(op){
-			case 1:
-				cadastroClientes();
-				break;
-			case 0:
-				printf("\nSaindo...\n");
-                break;
-  			default:
-				printf("\nDigite novamente\n");
-                break;
-		}
-	}while(op != 0);
-
-    return 0;
+    return dataAtual;
 }
 
 void cadastroClientes(){
@@ -315,7 +284,7 @@ int validarTelefone(char telefone[]) {
 
 int validarCPF(char cpf[]){
 	int tam = strlen(cpf), i = 0, soma = 0,todosIguais = 1;
-    int peso = 10, resto = 0, atualNumero = 0;
+    int peso = 10, resto = 0, atualNumero = 0, digitosIniciais, digitosFinais;
 
     // 1 verificar se o cpf tem exatamente 11 digitos
 	if(tam != 11){
@@ -334,17 +303,54 @@ int validarCPF(char cpf[]){
         return 0;
     }
 
-    // 3 multiplicar
-    for(i = 0; i < 8; i++){
+    // 3 multiplicar os primeiros digitos. Já que o 10 numero é para proteger o 9 primeiros digitos
+    for(i = 0; i < 9; i++){
             atualNumero = cpf[i] - '0';
             soma += (atualNumero * peso);
             peso--;
     }
 
+    // armazenando a soma
     resto = soma % 11;
+    // para fazer a verificação precisa do resto da divisão 
 
-    // continuar depois
+    //o resto não pode ter mais de 1 casa
+    if(resto < 2){
+        digitosIniciais = 0; // Se o resto der 0 ou 1, o digito vira 0. 
+    } else {
+        digitosIniciais = 11 - resto; // Senão a conta continua normal 
+    }
 
+    // Verifica se tem um numero na 10 casa
+    if(digitosIniciais != (cpf[9] - '0')){
+        return 0; // Se for diferente, o CPF é invalido
+    }
+
+    // Fase de verificar o segundo digito
+    // Limpar a soma e peso
+    soma = 0;
+    peso = 11;
+
+    // Multiplicar os 10 primeiros numeros. O 11 numero do CPF serve para proteger os 9 numeros bases e o 10 numero.
+    // deve separar o 10 e 9 numero para poder fazer a validação
+    for(i = 0; i < 10; i++){
+        atualNumero = cpf[i] - '0';
+        soma += (atualNumero * peso);
+        peso--;
+    }
+
+     resto = soma % 11;
+
+    if(resto < 2){
+        digitosFinais = 0; 
+    } else {
+        digitosFinais = 11 - resto; 
+    }
+
+    // Verifica se tem um numero na 10 casa
+    if(digitosFinais != (cpf[10] - '0')){
+        return 0; // Se for diferente, o CPF é invalido
+    }
 	return 1;
 }
 
@@ -374,13 +380,16 @@ int validarEmail (char email[]) {
 
     return 1;
 }
+
 //
 // vou fazer as financeiras aqui embaixo
 // fica muito ruim?
+
+//não tem problema. Só deixa declarado as coisas de função lá em cima e depois vai colocando aqui embaixo
 float recibos() {
     float total = 0;
     int i;
-    for (i = 0; i < qtdParcelas; i++) {
+    for (i = 0; i < qtdParcelas; i++) { //
         if (listaParcelas[i].situacaoDaParcela == 'R') {
             total += listaParcelas[i].valorDaParcela;
         }
@@ -409,3 +418,41 @@ float parcelasVencidas() {
     }
     return total;
 }
+
+void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda) {
+	Parcela p;
+    data vencimento;
+    float valorParcela;
+    int i;
+
+	valorParcela = valorTotal / qtd;
+    vencimento = dataVenda;
+	for (i = 0; i < qtd; i++) {
+        if (qtdParcelas >= MAX_PARCELAS) {
+            printf("Limite de parcelas atingido\n");
+            return;
+        	}
+		
+	vencimento = diasPorMes(vencimento);
+ 		p.idParcela = proximoIdParcela++;
+        p.idVenda  = idVenda;
+        p.numeroDaParcela = i + 1;
+        p.valorDaParcela = valorParcela;
+        p.dataVencimento =  vencimento;
+        p.dataRecebimento.dia = 0;
+        p.dataRecebimento.mes = 0;
+        p.dataRecebimento.ano = 0;
+        p.situacaoDaParcela = 'A'; // A de Em aberto
+ 			listaParcelas[qtdParcelas] = p;
+        	qtdParcelas++;
+    }
+}
+
+/*
+Só anotação, variaveis como a listaParcelas, qtdParcelas, proximoParcela não estavam declaradas
+
+teve umas confusão entre qtd e qtde. Coloquei tudo qtd
+
+vai ter que criar uma função chamada diaPorMes para poder executar o vencimento 
+
+*/
