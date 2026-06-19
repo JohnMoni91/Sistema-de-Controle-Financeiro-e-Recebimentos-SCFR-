@@ -354,7 +354,6 @@ int validarCPF(char cpf[]){
 	return 1;
 }
 
-
 // validando o email
 int validarEmail (char email[]) {
     int TAM = strlen(email);
