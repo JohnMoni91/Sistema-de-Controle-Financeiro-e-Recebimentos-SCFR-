@@ -3,17 +3,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-/*
-#include <time.h>
-#include <locale.h>
-
-Locale é para localização do idioma
-Só para deixar salvo caso o professor permitir. time.h É para verificar o ano conforme o tempo atual
-*/
-//Parcelas é maximo 12 mesmo?
-//acredito que sim
 #define LISTA 100
 #define MAX_PARCELAS 12
+
 // estrutura de data de registro
 typedef struct Data
 {
@@ -92,7 +84,6 @@ Para pagamentos a prazo, deverá ser gerado uma parcela para cada prestração d
 */
 int anoBissexto(int ano);
 
-
 //Menu
 void cadastroClientes();
 void buscarClientes();
@@ -110,6 +101,159 @@ Consultar com base nos dados da venda e parcela existente. O cliente pode ter ma
 // gerador automatico de parcelas
 void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda);
 
+int main(){
+int op;
+    do{
+        printf("\nMENU\n");
+        printf("1) Cadastrar Cliente\n");
+        printf("0) Sair\n");
+        printf("Escolha: ");
+        scanf("%d", &op);
+        getchar();
+
+        switch(op) {
+            case 1:
+                cadastroClientes();
+                break;
+            case 2:
+                buscarClientes();
+                break;
+        }
+    }while(op != 0);
+
+    return 0;
+}
+
+void buscarClientes(){
+    int op, i = 0;
+    char cpfBuscar[20];
+    char nomeBuscar[50];
+    char telefoneBuscar[15];
+    int encontrado = 0;
+
+    do{
+        printf("Deseja buscar por qual meio?");
+        printf("1) CPF\n");
+        printf("2) Nome\n");
+        printf("3) Telefone\n");
+        printf("0) Retornar\n");
+
+        scanf("%d", &op);
+        getchar();
+
+        switch (op)
+        {
+        case 1:
+            printf("\nDigite o CPF: ");
+            fgets(cpfBuscar, 20, stdin);
+
+            cpfBuscar[strlen(cpfBuscar) - 1] = '\0';
+
+            //analisando todos os clientes registrados
+            for(i = 0; i < qtdClientes; i++){
+                //se tiver um cpf identico ao registrado
+                if(strcmp(cpfBuscar, listaClientes[i].CPF) == 0){
+                    encontrado = 1;
+                    
+                    printf("\nDados encontrados\n");
+                    printf("Nome: %s\n", listaClientes[i].nome);
+                    printf("CPF: %s\n", listaClientes[i].CPF);
+                    printf("Telefone: %s\n", listaClientes[i].telefone);
+                    
+                    printf("Data de Nascimento: %02d/%02d/%d\n", 
+                            listaClientes[i].dataNascimento.dia, 
+                            listaClientes[i].dataNascimento.mes, 
+                            listaClientes[i].dataNascimento.ano);
+                            
+                    printf("Numero do Cartao: %s\n", listaClientes[i].numeroCartao);
+                    printf("Chave Pix / Email: %s\n", listaClientes[i].chavePix);
+                }
+            } 
+
+            //se não encontrou
+            if(encontrado == 0){
+                printf("\nCliente não encontrado.");
+            }
+
+            encontrado = 0;
+            break;
+
+            case 2:
+            printf("\nDigite o nome: ");
+            fgets(nomeBuscar, 50, stdin);
+
+            nomeBuscar[strlen(nomeBuscar) - 1] = '\0';
+
+            //analisando todos os clientes registrados
+            for(i = 0; i < qtdClientes; i++){
+                //se tiver um nome identico ao registrado
+                if(strcmp(nomeBuscar, listaClientes[i].nome) == 0){
+                    encontrado = 1;
+                    
+                    printf("\nDados encontrados\n");
+                    printf("Nome: %s\n", listaClientes[i].nome);
+                    printf("CPF: %s\n", listaClientes[i].CPF);
+                    printf("Telefone: %s\n", listaClientes[i].telefone);
+                    
+                    printf("Data de Nascimento: %02d/%02d/%d\n", 
+                            listaClientes[i].dataNascimento.dia, 
+                            listaClientes[i].dataNascimento.mes, 
+                            listaClientes[i].dataNascimento.ano);
+                            
+                    printf("Numero do Cartao: %s\n", listaClientes[i].numeroCartao);
+                    printf("Chave Pix / Email: %s\n", listaClientes[i].chavePix);
+                }
+            } 
+
+            //se não encontrou
+            if(encontrado == 0){
+                printf("\nCliente não encontrado.");
+            }
+            
+            encontrado = 0;
+            break;
+
+            case 3:
+            printf("\nDigite o telefone: ");
+            fgets(telefoneBuscar, 15, stdin);
+
+            telefoneBuscar[strlen(telefoneBuscar) - 1] = '\0';
+
+            //analisando todos os clientes registrados
+            for(i = 0; i < qtdClientes; i++){
+                //se tiver um telefone identico ao registrado
+                if(strcmp(telefoneBuscar, listaClientes[i].telefone) == 0){
+                    encontrado = 1;
+                    
+                    printf("\nDados encontrados\n");
+                    printf("Nome: %s\n", listaClientes[i].nome);
+                    printf("CPF: %s\n", listaClientes[i].CPF);
+                    printf("Telefone: %s\n", listaClientes[i].telefone);
+                    
+                    printf("Data de Nascimento: %02d/%02d/%d\n", 
+                            listaClientes[i].dataNascimento.dia, 
+                            listaClientes[i].dataNascimento.mes, 
+                            listaClientes[i].dataNascimento.ano);
+                            
+                    printf("Numero do Cartao: %s\n", listaClientes[i].numeroCartao);
+                    printf("Chave Pix / Email: %s\n", listaClientes[i].chavePix);
+                }
+            } 
+
+            //se não encontrou
+            if(encontrado == 0){
+                printf("\nCliente não encontrado.");
+            }
+            
+            encontrado = 0;
+            break;
+
+        default:
+            break;
+        }
+
+    }while (op != 0);
+}
 
 //declarando a função de diasPorMes
 data diasPorMes(data dataAtual) {
@@ -124,75 +268,103 @@ data diasPorMes(data dataAtual) {
 void cadastroClientes(){
     Cliente listaClientes[LISTA];
     int qtdClientes = 0;
+    int cpfValido = 0;
+    int telefoneValido = 0;
+    int dataNasciValido = 0;
+    int cartaoValido = 0;
+    int emailValido = 0;
     
-    // verifica se a lista j� est� cheia
+    // verifica se a lista ja esta cheia
     if (qtdClientes >= LISTA) {
         printf("\nLimite de clientes cadastrados atingido!\n");
-        return; // sai da fun��o
+        return; // sai da funçãoo
     }
 
     Cliente novoCliente;
-    
-    // CPF
-    printf("\nDigite o CPF: ");
-    fgets(novoCliente.CPF, 20, stdin);
 
-    // validando cpf
-    if(validarCPF(novoCliente.CPF) == 1){
-        printf("\nCPF valido!\n");
-    } else {
-        printf("\nCPF invalido!\n");
-    }
+    // Antes de começar a cadastras, precisa verificar se o cpf esta correto
+    do{
+        // CPF
+        printf("\nDigite o CPF: ");
+        fgets(novoCliente.CPF, 20, stdin);
+
+        novoCliente.CPF[strlen(novoCliente.CPF) - 1] = '\0';
+
+        // validando cpf
+        if(validarCPF(novoCliente.CPF) == 1){
+            printf("\nCPF valido!\n");
+            cpfValido = 1;
+        } else {
+            printf("\nCPF invalido!\n");
+        }
+    } while(cpfValido == 0);
 
     // Nome
     printf("\nDigite o nome: ");
     fgets(novoCliente.nome, 50, stdin);
 
-    // Telefone
-    printf("\nDigite o telefone: ");
-    fgets(novoCliente.telefone, 15, stdin);
+    novoCliente.nome[strlen(novoCliente.nome) - 1] = '\0';
 
-    if(validarTelefone(novoCliente.telefone) == 1){
-        printf("\nTelefone valido!\n");
-    } else {
-        printf("\nTelefone invalido!\n");
-    }
+    do{
+        // Telefone
+        printf("\nDigite o telefone: ");
+        fgets(novoCliente.telefone, 15, stdin);
 
-    // Data de nascimento
-    printf("\nDigite o dia de seu nascimento: ");
-    scanf("%d", &novoCliente.dataNascimento.dia);
+        novoCliente.telefone[strlen(novoCliente.telefone) - 1] = '\0';
 
-    printf("\nDigite o mes de seu nascimento: ");
-    scanf("%d", &novoCliente.dataNascimento.mes);
+        if(validarTelefone(novoCliente.telefone) == 1){
+            printf("\nTelefone valido!\n");
+        } else {
+            printf("\nTelefone invalido!\n");
+        }
+    }while(telefoneValido == 0);
 
-    printf("\nDigite o ano de seu nascimento: ");
-    scanf("%d", &novoCliente.dataNascimento.ano);
+    do{
+        // Data de nascimento
+        printf("\nDigite o dia de seu nascimento: ");
+        scanf("%d", &novoCliente.dataNascimento.dia);
 
-    if(validarData(novoCliente.dataNascimento) == 1){
-        printf("\nData valida!\n");
-    } else {
-        printf("\nData invalida!\n");
-    }
+        printf("\nDigite o mes de seu nascimento: ");
+        scanf("%d", &novoCliente.dataNascimento.mes);
 
-    // Numero de cartao
-    printf("\nDigite o numero do cartao: ");
-    fgets(novoCliente.numeroCartao, 20, stdin);
+        printf("\nDigite o ano de seu nascimento: ");
+        scanf("%d", &novoCliente.dataNascimento.ano);
+        getchar(); // limpar o buffer
 
-    if(validarCartao(novoCliente.numeroCartao) == 1){
-        printf("\nNumero do cartao valido!\n");
-    } else {
-        printf("\nNumero do cartao invalido!\n");
-    }
+        if(validarData(novoCliente.dataNascimento) == 1){
+            printf("\nData valida!\n");
+        } else {
+            printf("\nData invalida!\n");
+        }
+    }while(dataNasciValido == 0);
 
-	// Chave Pix ou email
-	printf("\nDigite a sua chave Pix (somente email): ");
-	fgets(novoCliente.chavePix, 30, stdin);
+    do{
+        // Numero de cartao
+        printf("\nDigite o numero do cartao: ");
+        fgets(novoCliente.numeroCartao, 20, stdin);
 
-	if(validarEmail(novoCliente.chavePix) == 1){
-		printf("\nEmail/Pix valido!\n");
-	} else {
-		printf("\nEmail invalido!\n");
-	}
+        novoCliente.numeroCartao[strlen(novoCliente.numeroCartao) - 1] = '\0';
+
+        if(validarCartao(novoCliente.numeroCartao) == 1){
+            printf("\nNumero do cartao valido!\n");
+        } else {
+            printf("\nNumero do cartao invalido!\n");
+        }
+    }while(cartaoValido == 0);
+
+    do{
+        // Chave Pix ou email
+        printf("\nDigite a sua chave Pix (somente email): ");
+        fgets(novoCliente.chavePix, 30, stdin);
+
+        novoCliente.chavePix[strlen(novoCliente.chavePix) - 1] = '\0';
+
+        if(validarEmail(novoCliente.chavePix) == 1){
+            printf("\nEmail/Pix valido!\n");
+        } else {
+            printf("\nEmail invalido!\n");
+        }
+    }while(emailValido == 0);
 	
 	listaClientes[qtdClientes] = novoCliente;
     qtdClientes++;
@@ -204,10 +376,10 @@ int validarCartao(char numeroCartao[]){
 	// percorrer todos os numeros impar
 	for(i = tam - 1; i >= 0; i--){ // percorre cada numero de direita para esquerda 
 		
-		//alterar o tipo char para int
+		// alterar o tipo char para int
 		digito = numeroCartao[i] - '0';
 
-		//se for a posição impar, ele dobra
+		// se for a posição impar, ele dobra
 		if(casa == 1){
 			digito *= 2;
 		} if(digito > 9){ // Não deve ser mais do que nove a soma
@@ -267,7 +439,7 @@ int anoBissexto(int ano){
     return 0;
 }
 
-//validando telefone
+// validando telefone
 int validarTelefone(char telefone[]) {
     int TAM = strlen(telefone);
     int i = 0;
@@ -291,7 +463,7 @@ int validarCPF(char cpf[]){
 		return 0;
 	}
 
-    // 2 verificar se o cpf não são iguais
+    // 2 verificar se o cpf nao sao iguais
     for(i = 0; i < 11; i++){
         if(cpf[i] != cpf[0]){
             todosIguais = 0;
@@ -323,7 +495,7 @@ int validarCPF(char cpf[]){
 
     // Verifica se tem um numero na 10 casa
     if(digitosIniciais != (cpf[9] - '0')){
-        return 0; // Se for diferente, o CPF é invalido
+        return 0; // Se for diferente, o CPF eh invalido
     }
 
     // Fase de verificar o segundo digito
@@ -357,7 +529,7 @@ int validarCPF(char cpf[]){
 // validando o email
 int validarEmail (char email[]) {
     int TAM = strlen(email);
-    int psAR = -1,psPonto = -1, qtdAR = 0;     //psAR é a posição do '@' e o psPonto é a posição do '.', o -1 é 'nao encontrado'
+    int psAR = -1,psPonto = -1, qtdAR = 0;     // psAR é a posição do '@' e o psPonto é a posição do '.', o -1 é 'nao encontrado'
 	int i = 0;
 	
     for (i = 0; i < TAM; i++) {
@@ -381,11 +553,6 @@ int validarEmail (char email[]) {
     return 1;
 }
 
-//
-// vou fazer as financeiras aqui embaixo
-// fica muito ruim?
-
-//não tem problema. Só deixa declarado as coisas de função lá em cima e depois vai colocando aqui embaixo
 float recibos() {
     float total = 0;
     int i;
@@ -447,12 +614,3 @@ void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda) {
         	qtdParcelas++;
     }
 }
-
-/*
-Só anotação, variaveis como a listaParcelas, qtdParcelas, proximoParcela não estavam declaradas
-
-teve umas confusão entre qtd e qtde. Coloquei tudo qtd
-
-vai ter que criar uma função chamada diaPorMes para poder executar o vencimento 
-
-*/
