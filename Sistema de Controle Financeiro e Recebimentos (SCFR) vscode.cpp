@@ -61,7 +61,6 @@ float aindaReceber();
 float parcelasVencidas();
 float debitosPendentes();
 float faturamentoTotal();
-
 int validarCPF(char cpf[]);
 int validarData(data d);
 int anoBissexto(int ano);
@@ -69,12 +68,13 @@ int validarTelefone(char telefone[]);
 int validarCartao(char numeroCartao[]);
 int validarEmail (char email[]);
 int registroVendas();
-
 void cadastroClientes();
 void buscarClientes();
 int consultarVendas();
-
 void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda);
+void quitarParcela();
+void liquidarDivida();
+void identificarParcelasAtraso();
 
 int main(){
 int op;
@@ -82,7 +82,14 @@ int op;
         printf("\nMENU\n");
         printf("1) Cadastrar Cliente\n");
         printf("2) Buscar Cliente\n");
+        printf("3) Registrar Venda\n");
+        printf("4) Consultar Vendas\n");
+        printf("5) Atualizar Parcelas em Atraso\n");
+        printf("6) Quitar Parcela\n");
+        printf("7) Liquidar Divida Total\n");
+        printf("8) Relatorios Financeiros (Totais e Debitos)\n");
         printf("0) Sair\n");
+        printf("\n");
         printf("Escolha: ");
         scanf("%d", &op);
         getchar();
@@ -93,6 +100,31 @@ int op;
                 break;
             case 2:
                 buscarClientes();
+                break;
+            case 3:
+                registroVendas();
+                break;
+            case 4:
+                consultarVendas();
+                break;
+            case 5:
+                identificarParcelasAtraso();
+                break;
+            case 6:
+                quitarParcela();
+                break;
+            case 7:
+                liquidarDivida();
+                break;
+            case 8:
+                debitosPendentes();
+                faturamentoTotal();
+                break;
+            case 0:
+                printf("\nSaindo...");
+                break;
+            default:
+                printf("\nErro");
                 break;
         }
     }while(op != 0);
@@ -336,7 +368,7 @@ int registroVendas(){
         printf("\nAno: ");
         scanf("%d", &venda.dataVenda.ano);
             
-        printf("\nDigite qual foi a forma de pagamento: \n1 - Dinheiro\n2 - PIX\n3 - Debito\n4 - Parcelado\n");
+        printf("\nDigite qual foi a forma de pagamento: \n1) Dinheiro\n2) PIX\n3) Debito\n4) Parcelado\n");
         scanf("%d", &venda.formaPagamento);
 
         printf("\nDigite uma observacao: ");
@@ -603,9 +635,9 @@ int consultarVendas() {
 
     do {
         printf("\nConsultar vendas:\n");
-        printf("1 - Buscar por CPF\n");
-        printf("2 - Buscar por ID da venda\n");
-        printf("0 - Sair\n");
+        printf("1) Buscar por CPF\n");
+        printf("2) Buscar por ID da venda\n");
+        printf("0) Sair\n");
         printf("Escolha: ");
         scanf("%d", &op);
         getchar();
@@ -697,7 +729,8 @@ void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda) {
 	Parcela p;
     data vencimento;
     float valorParcela;
-    int i;
+    int i = 0;
+    float valorBase;
 
 	valorParcela = valorTotal / qtd;
     vencimento = dataVenda;
@@ -708,6 +741,7 @@ void geradorParcelas(int idVenda, float valorTotal, int qtd, data dataVenda) {
         	}
 		
 	vencimento = diasPorMes(vencimento);
+        p.valorDaParcela = valorBase * pow(1.01, i + 1);
  		p.idParcela = proximoIdParcela++;
         p.idVenda  = idVenda;
         p.numeroDaParcela = i + 1;
@@ -768,16 +802,8 @@ float debitosPendentes() {
     }
     return total;
 }
-
-float faturamentoTotal() {
-    float total = 0;
-    int i;
-    for (i = 0; i < qtdVendas; i++) {
-        total += listaVendas[i].valorTotalVenda;
-    }
-    return total;
-}
 */
+
 /*
 void identificarParcelasAtraso() {
     data dataAtual;
