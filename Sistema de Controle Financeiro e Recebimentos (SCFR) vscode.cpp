@@ -305,9 +305,15 @@ int anoBissexto(int ano){
 
 int validarTelefone(char telefone[]) {
     int TAM = strlen(telefone);
-    int i = 0;
-    if (TAM != 11 && TAM != 12) { return 0; }
-    if (telefone[0] != '0') { return 0; }
+    int i = 0;9
+    
+    if (TAM != 11 && TAM != 12){
+		return 0;
+	}
+	
+    if (telefone[0] != '0'){
+		return 0;
+	}
 
     for(i = 0; i < TAM; i++) {
         if (telefone[i] < '0' || telefone[i] > '9'){
@@ -319,6 +325,10 @@ int validarTelefone(char telefone[]) {
 
 int validarCartao(char numeroCartao[]){
 	int soma = 0, i = 0, tam = strlen(numeroCartao), casa = 0, digito;
+	
+	if(tam < 13 || tam > 16){
+        return 0;
+    }
 
     for(i = 0; i < tam; i++){
         if(numeroCartao[i] < '0' || numeroCartao[i] > '9'){
@@ -417,6 +427,12 @@ int registroVendas(){
         scanf("%d", &venda.dataVenda.mes);
         printf("\nAno: ");
         scanf("%d", &venda.dataVenda.ano);
+        
+        if (validarData(venda.dataVenda) == 1) {
+            break;
+        }
+        
+        printf("\nData invalida.\n");
     }while(validarData(venda.dataVenda) == 0);
             
     printf("\nDigite qual foi a forma de pagamento: \n1) Dinheiro\n2) PIX\n3) Debito\n4) Parcelado\n");
@@ -559,7 +575,7 @@ void buscarClientes(){
     int encontrado = 0;
 
     do{
-        printf("Deseja buscar por qual meio?");
+        printf("\nDeseja buscar por qual meio?\n");
         printf("1) CPF\n");
         printf("2) Nome\n");
         printf("3) Telefone\n");
@@ -628,7 +644,7 @@ void buscarClientes(){
             } 
 
             if(encontrado == 0){
-                printf("\nCliente nÃ£o encontrado.");
+                printf("\nCliente nÃƒÂ£o encontrado.");
             }
             
             encontrado = 0;
@@ -948,7 +964,7 @@ void quitarParcela() {
 
 void liquidarDivida(){
 	char cpfBuscar[20];
-	int k = 0, j = 0, i = 0, indiceCliente = -1, compraIdentificada = 0, indiceVendas = -1;
+	int k = 0, j = 0, i = 0, indiceCliente = -1, compraIdentificada = 0;
 	int idVendaBusca, parcelasPendentes = 0, diasAtraso;
 	float totalDivida = 0.0, juros = 0.0;
 	int escolha;
@@ -990,7 +1006,7 @@ void liquidarDivida(){
     	return; 
 	}
 	
-	printf("\nQual venda deseja liquidar?");
+	printf("\nQual venda deseja liquidar?\n");
 	scanf("%d", &idVendaBusca);
 	getchar();
 	
