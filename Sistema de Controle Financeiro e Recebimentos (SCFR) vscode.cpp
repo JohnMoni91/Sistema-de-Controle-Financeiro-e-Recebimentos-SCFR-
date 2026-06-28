@@ -305,7 +305,7 @@ int anoBissexto(int ano){
 
 int validarTelefone(char telefone[]) {
     int TAM = strlen(telefone);
-    int i = 0;9
+    int i = 0,9;
     
     if (TAM != 11 && TAM != 12){
 		return 0;
