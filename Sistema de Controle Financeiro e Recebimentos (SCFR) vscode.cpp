@@ -5,7 +5,7 @@ Disciplina: Algoritmos 1
 Professor: Francisco Pereira Junior (Thesko)
 
 Autores:
-João Pedro Diniz Nacur
+Jo�o Pedro Diniz Nacur
 Theo Lopes Mansano
 
 UTFPR - 2026
@@ -450,8 +450,15 @@ int registroVendas(){
     venda.cliente = listaClientes[indiceCliente];
     venda.idVenda = proximoIdVenda++;
     
-    printf("\nDigite o valor total da venda: ");
-    scanf("%f", &venda.valorTotalVenda);
+    do{
+        printf("\nDigite o valor total da venda: ");
+        scanf("%f", &venda.valorTotalVenda);
+
+        if(venda.valorTotalVenda <= 0){
+            printf("\nValor invalido.\n");
+        }
+
+    }while(venda.valorTotalVenda <= 0);
 
     printf("\nDigite a data da venda ");
     
@@ -470,9 +477,22 @@ int registroVendas(){
         printf("\nData invalida.\n");
     }while(validarData(venda.dataVenda) == 0);
             
-    printf("\nDigite qual foi a forma de pagamento: \n1) Dinheiro\n2) PIX\n3) Cartao a Vista\n4) Cartao Parcelado\n");
-    scanf("%d", &venda.formaPagamento);
-    getchar();
+    do{
+        printf("\nDigite a forma de pagamento:\n");
+        printf("1) Dinheiro\n");
+        printf("2) PIX\n");
+        printf("3) Cartao a Vista\n");
+        printf("4) Cartao Parcelado\n");
+        printf("Opcao: ");
+
+        scanf("%d", &venda.formaPagamento);
+        getchar();
+
+        if(venda.formaPagamento < 1 || venda.formaPagamento > 4){
+            printf("\nForma de pagamento invalida.\n");
+        }
+
+    }while(venda.formaPagamento < 1 || venda.formaPagamento > 4);
 
     printf("\nDigite uma observacao: ");
     fgets(venda.observacao, 50, stdin);
@@ -518,18 +538,32 @@ void cadastroClientes(){
     Cliente novoCliente;
 
     do{
+        int cpfExiste = 0;
+
         printf("\nDigite o CPF: ");
         fgets(novoCliente.CPF, 20, stdin);
+        novoCliente.CPF[strlen(novoCliente.CPF)-1] = '\0';
 
-        novoCliente.CPF[strlen(novoCliente.CPF) - 1] = '\0';
+        if(validarCPF(novoCliente.CPF) == 0){
+            printf("\nCPF invalido!\n");
+            continue;
+        }
 
-        if(validarCPF(novoCliente.CPF) == 1){
+        for(int i = 0; i < qtdClientes; i++){
+            if(strcmp(novoCliente.CPF, listaClientes[i].CPF) == 0){
+                cpfExiste = 1;
+                break;
+            }
+        }
+
+        if(cpfExiste){
+            printf("\nCPF ja cadastrado!\n");
+        }else{
             printf("\nCPF valido!\n");
             cpfValido = 1;
-        } else {
-            printf("\nCPF invalido!\n");
         }
-    } while(cpfValido == 0);
+
+    }while(cpfValido == 0);
 
     printf("\nDigite o nome: ");
     fgets(novoCliente.nome, 50, stdin);
@@ -565,7 +599,7 @@ void cadastroClientes(){
             printf("\nData valida!\n");
             dataNasciValido = 1;
         } else {
-            printf("\nData invalida!\n");
+            printf("\nData invalida.\n");
         }
     }while(dataNasciValido == 0);
 
@@ -734,7 +768,7 @@ data diasPorMes(data dataAtual) {
         dataAtual.ano += 1;
     }
     
-    // Evitar de digitar datas não existentes
+    // Evitar de digitar datas n�o existentes
     int diasPorMesArray[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (dataAtual.mes == 2 && ((dataAtual.ano % 4 == 0 && dataAtual.ano % 100 != 0) || (dataAtual.ano % 400 == 0))) {
         diasPorMesArray[2] = 29;
@@ -835,7 +869,7 @@ int consultarVendas() {
 
             default:
                 if (op != 0) {
-                    printf("\nOpcao invalida!\n");
+                    printf("\nOpcao invalida.\n");
                 }
                 break;
         }
@@ -940,7 +974,7 @@ void identificarParcelasAtraso() {
         if (validarData(dataAtual) == 1) 
         break;
         
-        printf("\nData invalida!\n");
+        printf("\nData invalida.\n");
         
     } while(1);
 
@@ -997,7 +1031,7 @@ void quitarParcela() {
         if (validarData(dataPagamento) == 1) 
         break;
 
-        printf("Data invalida!\n");
+        printf("Data invalida.\n");
 
     } while (1);
 
