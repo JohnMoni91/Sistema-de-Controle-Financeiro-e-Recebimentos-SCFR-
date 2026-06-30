@@ -1323,7 +1323,7 @@ void carregarDadosIniciais() {
     strcpy(listaClientes[0].chavePix, "cliente1@email.com");
     qtdClientes++;
 
-    strcpy(listaClientes[1].CPF, "10987654321");
+    strcpy(listaClientes[1].CPF, "41339047292");
     strcpy(listaClientes[1].nome, "Cliente tipo 2");
     strcpy(listaClientes[1].telefone, "08722752288");
     listaClientes[1].dataNascimento.dia = 25;
